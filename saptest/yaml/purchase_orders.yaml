@@ -1,0 +1,729 @@
+swagger: '2.0'
+security:
+- OAuth2: []
+securityDefinitions:
+  OAuth2:
+    type: oauth2
+    description: To use this API, you need to obtain the OAuth client credentials (client ID and secret) from SAP Ariba. After that, pass these client credentials to the SAP Ariba API token endpoint to obtain an access token.
+    tokenUrl: https://{regionOauth}/oauth/token
+    flow: application
+    scopes: {}
+externalDocs:
+  description: More information is available at https://developer.ariba.com/api where you can select your region's datacenter.
+  url: https://developer.ariba.com/api
+info:
+  version: 1.0.0
+  title: Ariba Network Purchase Orders Buyer API
+  description: The Purchase Order API enables you to retrieve purchase order header and item details from the Ariba Network.
+x-sap-stateInfo:
+  state: Active
+x-sap-shortText: Retrieve purchase order header and item details
+host: sandbox.api.sap.com
+basePath: /ariba/api/purchase-orders/v1/sandbox
+schemes:
+- https
+x-sap-ext-overview:
+- name: API Group
+  values:
+  - Ariba Network
+- name: API System Role
+  values:
+  - Ariba Network
+- name: Datacenters
+  values:
+  - US
+x-servers:
+- url: https://{region}/api/purchase-orders/v1/{environment}
+  description: Ariba Network Purchase Orders Buyer API endpoint
+  templates:
+    region:
+      enum:
+      - openapi.ariba.com
+      default: openapi.ariba.com
+      description: The SAP Ariba region where the SAP Ariba APIs are used.
+    regionOauth:
+      enum:
+      - api.ariba.com
+      default: api.ariba.com
+      description: The SAP Ariba regional OAuth server associated with the region where the SAP Ariba APIs are used.
+    environment:
+      enum:
+      - sandbox
+      - prod
+      default: sandbox
+      description: Public URI Prefix for different environments, prod is Test or Production environment for Cloud Business Applications and sandbox is Mock environment with sample data. For more information, go to the SAP Ariba Developer Portal at https://developer.ariba.com.
+tags:
+- name: purchase-orders
+  description: Ariba Network Purchase Orders Buyer API
+paths:
+  /orders:
+    get:
+      tags:
+      - Orders
+      summary: Retrieves purchase-order header information.
+      description: |-
+        Retrieves header information in purchase orders for a specified buyer.
+         Information can be further refined by filters, such as limiting data to a certain supplier and order ID.
+      operationId: getOrderHeaderListUsingGET
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: X-ARIBA-NETWORK-ID
+        in: header
+        description: The buyer's ANID.
+        required: true
+        type: string
+        default: AN02000000280
+      - name: $filter
+        in: query
+        description: |
+          $filter=_expression_. The value of _expression_ is a combination of a resource parameter and its value. The 'eq' operator to links the parameter and value. The'and' operator links two or more parameter-value pairs. For example, $filter=a eq 'b' and c eq 'd'. This feature supports the following parameters:<br/>
+          buyerANID         -- The buyer's ANID. <br/>
+          documentNumber       -- Same as the orderID. The identifier for this order, similar to the purchase order number. <br/>
+          orderStatus          -- Indicates what state of processing the order has reached. <br/>
+          routingStatus        -- Indicates whether a purchase order or service order is queued, sent, acknowledged, or if routing failed.<br/>
+          startDate            -- The starting date of the period in which Ariba Network received the order. The maximum date range is 31 days.<br/>
+          endDate              -- The ending date of the period in which Ariba Network received the order. The maximum date range is 31 days.<br/>
+        required: false
+        type: string
+      - name: $orderby
+        in: query
+        description: |
+          Specifies the sort order of results. You need to provide the parameter buyerANID into $filter when using $orderby. For example, '$orderby=_propertyName_ asc'.<br/>
+          The order can be either ascending or descending: asc or desc. If $orderby is not specified, results are sorted in ascending order by default.<br/>
+          _propertyName_  -- The column name to sort by. This is either  BUYERORGID or SUPPLIERORGID. <br/>
+        required: false
+        type: string
+      - name: $skip
+        in: query
+        description: Specifies the number of items to skip (offset).
+        required: false
+        type: integer
+        format: int32
+      - name: $top
+        in: query
+        description: Specifies the number of items to return (page size).
+        required: false
+        type: integer
+        format: int32
+      - name: $count
+        in: query
+        description: |
+          Returns the number of elements in a collection inline. The syntax is $count=true.<br/>
+        required: false
+        type: string
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/OrderHeaders'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/BadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/Forbidden'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
+  /items:
+    get:
+      tags:
+      - Orders
+      summary: Retrieves line-item information from purchase orders.
+      description: |-
+        Retrieves information from line items in purchase orders for a specified buyer.
+         Information can be further refined by filters, such as limiting data to a certain supplier and order ID.
+      operationId: getOrderItemsListUsingGET
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - name: X-ARIBA-NETWORK-ID
+        in: header
+        description: The buyer's ANID.
+        required: true
+        type: string
+        default: AN02000000280
+      - name: $filter
+        in: query
+        description: |
+          $filter=_expression_. The _expression_ is the combination of a resource parameter and its value. The 'eq' operator links a parameter and its value. The 'and' operator links two or more parameter-value pairs. For example, $filter=a eq 'b' and c eq 'd'. This feature supports the following parameters:<br/>
+          buyerANID         -- The buyer's ANID. <br/>
+          documentNumber       -- The identifier for this order, similar to the purchase order number. <br/>
+          orderStatus          -- Indicates what state of processing the order has reached. <br/>
+          routingStatus        -- Indicates whether a purchase order or service order is queued, sent, acknowledged, or if routing failed.<br/>
+          startDate            -- The starting date of the period in which Ariba Network received the order. The maximum date range is 31 days.<br/>
+          endDate              -- The ending date of the period in which Ariba Network received the order. The maximum date range is 31 days.<br/>
+        required: false
+        type: string
+      - name: $orderby
+        in: query
+        description: |
+          Specifies the sort order of results. You need to provide the parameter supplierANID into $filter when using $orderby. For example, $orderby=propertyName asc.<br/>
+          The order can be either ascending or descending: asc or desc. If $orderby
+           is not specified, results are sorted in  ascending order by default.<br/>
+
+          propertyName    -- The column to sort on. This is either BUYERORGID or SUPPLIERORGID. <br/>
+        required: false
+        type: string
+      - name: $skip
+        in: query
+        description: The number of items to be skip (offset).
+        required: false
+        type: integer
+        format: int32
+      - name: $top
+        in: query
+        description: The number of items to return (page size).
+        required: false
+        type: integer
+        format: int32
+      - name: $count
+        in: query
+        description: |
+          Returns the number of elements in a collection inline. The syntax is $count=true.<br/>
+        required: false
+        type: string
+      responses:
+        '200':
+          description: Successful Response
+          schema:
+            $ref: '#/definitions/OrderLineItems'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/BadRequest'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Unauthorized'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/Forbidden'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
+definitions:
+  OrderHeader:
+    type: object
+    properties:
+      hideAmount:
+        type: boolean
+        example: false
+        description: An extrinsic that allows you to mask values for the amount.
+      documentNumber:
+        type: string
+        description: Same as the orderID. The documentNumber is an identifier for a particular order, similar to the purchase order number.
+      supplierName:
+        type: string
+        description: The supplier's name.
+      supplierANID:
+        type: string
+        description: The supplier's AN ID.
+      vendorId:
+        type: string
+        description: The supplier’s vendor ID.
+      buyerANID:
+        type: string
+        description: The buyer's AN ID.
+      customerName:
+        type: string
+        description: The customer's name.
+      customerANID:
+        type: string
+        description: The customer's AN ID.
+      systemId:
+        type: string
+        description: The customer’s system ID.
+      endPointId:
+        type: string
+        description: The customer’s endpoint ID.
+      poAmount:
+        $ref: '#/definitions/poAmountMoneyDto'
+      disputeId:
+        type: number
+        format: double
+      created:
+        type: string
+        description: Date the order was created.
+      status:
+        type: string
+        description: Routing Status indicates whether a purchase order or service order is queued, sent, acknowledged, or if routing failed.
+      dashboardStatus:
+        type: string
+        description: Order Status indicates where the order stands with regards to your processing of the order.
+      numberOfInvoices:
+        type: integer
+        format: int32
+      invoicedAmount:
+        $ref: '#/definitions/MoneyDto'
+      serviceId:
+        type: number
+        format: double
+      blanketPoId:
+        type: number
+        format: double
+      releaseRequired:
+        type: boolean
+        example: false
+        description: Used only if orderType is blanket, to indicate whether the blanket order requires releases (purchase orders). If yes, is specified, then the blanket order requires separate release orders before the supplier can act. If no, then the supplier can act on the blanket order itself. By default this value is unspecified.
+      isRelease:
+        type: string
+        description: Indicates whether the orderType is Release.
+      amountAvailable:
+        $ref: '#/definitions/MoneyDto'
+      documentStatus:
+        type: string
+      payloadId:
+        type: string
+        description: An unique identifier for the document. This is copied directly from the cXML element of the original document.
+      poVersion:
+        type: number
+        format: double
+        description: Specifies the order version number of change orders, starting with 1 for the original order.
+      orderDate:
+        type: string
+        description: The date and time the order was created.
+      transportTerms:
+        type: string
+        description: The transport information for the shipment described by the order and the ship notice. This information comes from the order specified by the buyer and has to be included in the ship notice, so that these can be edited by the supplier, if required. This information and possible changes have to be carried back to the buyer.
+      transportTermsDesc:
+        type: string
+        description: Transport terms description
+      paymentTermsExplanation:
+        type: string
+        description: Free-form text describing the payment terms for information purposes
+      attachmentCount:
+        type: integer
+        format: int32
+      purchasingAgentName:
+        type: string
+        description: Name of contact whose role is purchasing agent.
+      poShipToName:
+        type: string
+        description: 'For ship to, the Name element value should be the company or organization of the employee receiving ordered products. '
+      revision:
+        type: string
+      poShipToStreet:
+        type: string
+        description: 'The Street element is the street address of the ShipTo location where ordered products are to be delivered. '
+      poShipToCity:
+        type: string
+        description: The City element is the city where ordered products are to be shipped.
+      poShipToState:
+        type: string
+        description: The State element is a two-letter state, province, or territory code for the location where the goods are to be shipped.
+      poShipToPostalCode:
+        type: string
+        description: The PostalCode element is the postal or zip code where goods are to be shipped.
+      poShipToCountry:
+        type: string
+        description: The Country element is the country where goods are to be shipped.
+      isoCountryCode:
+        type: string
+        description: The International Organization for Standardization (ISO) country code for the country in the shipping address.
+      poShipToCode:
+        type: string
+      companyCode:
+        type: string
+        description: The customer’s buying entity.
+      purchasingGroupCode:
+        type: string
+        description: The customer’s purchasing group.
+      purchasingOrgCode:
+        type: string
+        description: The customer’s purchasing organization.
+      settlement:
+        type: string
+        description: Method of PO settlement.
+      paymentTerms:
+        type: array
+        description: Net Terms or Payment Terms
+        items:
+          type: string
+      balance:
+        $ref: '#/definitions/balanceMoneyDto'
+      blanket:
+        type: boolean
+      poClosed:
+        type: boolean
+      schedulingAgreement:
+        type: boolean
+  OrderLineItem:
+    type: object
+    properties:
+      documentNumber:
+        type: string
+        description: Same as the orderID. The documentNumber is an identifier for a particular order, similar to the purchase order number.
+      lineNumber:
+        type: integer
+        format: int32
+        description: Position (counting from 1) of this item in an order. Used to maintain a reference between items in create and update OrderRequest documents.
+      quantity:
+        type: number
+        format: double
+        description: How many items are desired. Supplier and Commodity level items in an order of type "blanket" will use a default value of "1". The quantity in this case will not be used to compute the sub total. The MaxAmount in the BlanketItemDetail will be used to indicate any line level amounts.
+      unitOfMeasure:
+        type: string
+        description: The UnitOfMeasure element contains the item Unit of Measure code as defined by the United Nations UOM standard.
+      unitPrice:
+        $ref: '#/definitions/unitPriceMoneyDto'
+      supplierPart:
+        type: string
+        description: SupplierPartID is how the supplier identifies an item.
+      buyerPartId:
+        type: string
+        description: It represents a product in buyer system. This identifier is specified by the buyer.
+      manufacturerPartId:
+        type: string
+        description: The  manufacturer's part number.
+      manufacturerName:
+        type: string
+        description: The manufacturer's name.
+      needBy:
+        type: string
+        description: The date this item was requested for delivery.
+      description:
+        type: string
+        description: Description of the items.
+      itemShipToName:
+        type: string
+        description: For ship to, the Name element value should be the company or organization of the employee receiving ordered products.
+      itemShipToStreet:
+        type: string
+        description: 'The Street element is the street address of the ShipTo location where ordered products are to be delivered. '
+      itemShipToCity:
+        type: string
+        description: The City element is the city where ordered products are to be shipped.
+      itemShipToState:
+        type: string
+        description: The State element is a two-letter state, province, or territory code for the location where the goods are to be shipped.
+      itemShipToPostalCode:
+        type: string
+        description: The PostalCode element is the postal or zip code where goods are to be shipped.
+      itemShipToCountry:
+        type: string
+        description: The Country element is the country where goods are to be shipped.
+      isoCountryCode:
+        type: string
+        description: The International Organization for Standardization (ISO) country code for the country in the shipping address.
+      itemShipToCode:
+        type: string
+      itemLocation:
+        type: string
+      priority:
+        type: integer
+        format: int32
+        description: Priority indicator, used to drive the priority of the orders for the suppliers.
+      productIdentifier:
+        type: string
+        description: Reference product number
+      lineOfBusiness:
+        type: string
+      productFamily:
+        type: string
+      productSubFamily:
+        type: string
+      productCode:
+        type: string
+      partCategory:
+        type: string
+      partType:
+        type: string
+      category:
+        type: string
+      accountingDistribution:
+        $ref: '#/definitions/AccountingDistribution'
+      pbqQuantity:
+        type: number
+        format: double
+        description: The PriceBasisQuantity element contains the quantity-based pricing for a line item. Quantity-based Pricing is commonly also referred to as Price-Based Quantity or PBQ. Quantity-based pricing allows the unit price of an item to be based on a different price unit quantity than 1.
+      pbqUOM:
+        type: string
+        description: Unit of measure for the PriceBasisQuantity.
+      pbqConversionFactor:
+        type: number
+        format: double
+        description: Conversion factor for the PriceBasisQuantity.
+      buyerBatchId:
+        type: string
+        description: An identifier from buyer to identify the material/goods produced in a single manufacturing run
+      supplierBatchId:
+        type: string
+        description: An identifier from supplier to identify the material/goods produced in a single manufacturing run
+      plannerCode:
+        type: string
+      plannerDescription:
+        type: string
+      confirmedQuantity:
+        type: number
+        format: double
+      cumulativeShipQuantity:
+        type: number
+        format: double
+        description: A number value to identify the cumulative quantity of all goods shipped against the scheduling agreement release over a period up to a certain date.
+      itemReturnAuthorizationNumber:
+        type: string
+        description: Return Authorization Number information for a line item.
+      releaseType:
+        type: string
+        description: A string value to identify the type of release. The value will be either jit or forecast.
+      cumulativeReceivedQuantity:
+        type: number
+        format: double
+        description: A number value to identify the cumulative quantity of all goods received against the scheduling agreement released over a period up to a certain date.
+      cumulativeReceivedUom:
+        type: string
+        description: Unit of measure for the cumulative received quantity.
+      materialGoAheadEndDate:
+        type: string
+        description: Date denoting the end of the material go-ahead period (go-ahead for purchase of input materials)
+      productionGoAheadEndDate:
+        type: string
+        description: Date denoting the end of the production go-ahead period
+      agreementDate:
+        type: string
+        description: The date and time the agreement request was created. This is different from the effective and expiry date of the agreement.
+      agreementId:
+        type: string
+        description: The procurement system agreement ID for this request
+      previousAsnId:
+        type: string
+        description: Previous ship notice ID
+      previousAsnDate:
+        type: string
+        description: Previous ship notice date
+      previousReceivedQuantity:
+        type: number
+        format: double
+      previousReceivedQuantityUom:
+        type: string
+        description: Unit of measure for the previous received quantity.
+      requestedDeliveryDate:
+        type: string
+        description: The date this item was requested for delivery.
+      requestedShipmentDate:
+        type: string
+        description: The ship date requested by the buyer for the item
+      storageLocation:
+        type: string
+      serialNumberInfo:
+        $ref: '#/definitions/SerialNumberInfo'
+      eanid:
+        type: string
+        description: ' The European Article Number, EAN, barcode.'
+      unspsc:
+        type: string
+        description: The United Nations Standard Products and Services Code, UNSPSC, classification.
+  OrderHeaders:
+    type: object
+    properties:
+      limit:
+        type: integer
+        format: int32
+      firstPage:
+        type: boolean
+      lastPage:
+        type: boolean
+      count:
+        type: integer
+        format: int64
+      totalPages:
+        type: integer
+        format: int32
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/OrderHeader'
+      offset:
+        type: integer
+        format: int32
+  OrderLineItems:
+    type: object
+    properties:
+      limit:
+        type: integer
+        format: int32
+      firstPage:
+        type: boolean
+      lastPage:
+        type: boolean
+      count:
+        type: integer
+        format: int64
+      totalPages:
+        type: integer
+        format: int32
+      content:
+        type: array
+        items:
+          $ref: '#/definitions/OrderLineItem'
+      offset:
+        type: integer
+        format: int32
+  MoneyDto:
+    type: object
+    properties:
+      amount:
+        type: number
+        format: double
+      approx:
+        type: number
+        format: double
+      conversionDate:
+        type: string
+      currencyCode:
+        type: string
+  poAmountMoneyDto:
+    description: Total cost of the order.
+    type: object
+    properties:
+      amount:
+        type: number
+        format: double
+      approx:
+        type: number
+        format: double
+      conversionDate:
+        type: string
+      currencyCode:
+        type: string
+  balanceMoneyDto:
+    description: In case of partially invoiced PO, this field contains the balance left on the PO to be invoiced.
+    type: object
+    properties:
+      amount:
+        type: number
+        format: double
+      approx:
+        type: number
+        format: double
+      conversionDate:
+        type: string
+      currencyCode:
+        type: string
+  unitPriceMoneyDto:
+    description: Price per unit of item.
+    type: object
+    properties:
+      amount:
+        type: number
+        format: double
+      approx:
+        type: number
+        format: double
+      conversionDate:
+        type: string
+      currencyCode:
+        type: string
+  SerialNumberInfo:
+    description: The buyer’s instructions on acceptable serial number values to be sent in an Advance Ship Notice (ASN).
+    type: object
+    properties:
+      maximum:
+        type: number
+        format: double
+      minimum:
+        type: number
+        format: double
+      profileType:
+        description: Can be numeric or null
+        type: string
+      profile:
+        description: Can be profile, range, or list.
+        type: string
+      values:
+        type: array
+        items:
+          type: string
+  AccountingDistribution:
+    description: ' The accounting distribution identifier.  An accounting distribution divides the cost of an item among multiple parties.  Suppliers return this identifier on invoices to facilitate the buyer’s reconciliation process.'
+    properties:
+      accountingSegments:
+        type: array
+        items:
+          type: object
+          properties:
+            code:
+              type: string
+            description:
+              type: string
+            name:
+              type: string
+      charge:
+        type: string
+      accountingName:
+        type: string
+  BadRequest:
+    type: object
+    properties:
+      errorMessages:
+        type: string
+      status:
+        type: string
+      statusCode:
+        type: integer
+        format: int32
+    title: Bad Request
+    example:
+      status: Bad Request
+      statusCode: 400
+      errorMessages: Bad Request
+  Unauthorized:
+    type: object
+    properties:
+      errorMessages:
+        type: string
+      status:
+        type: string
+      statusCode:
+        type: integer
+        format: int32
+    title: Unauthorized
+    example:
+      status: Unauthorized
+      statusCode: 401
+      errorMessages: Unauthorized Request
+  Forbidden:
+    type: object
+    properties:
+      errorMessages:
+        type: string
+      status:
+        type: string
+      statusCode:
+        type: integer
+        format: int32
+    title: Unauthorized
+    example:
+      status: Forbidden
+      statusCode: 403
+      errorMessages: Forbidden
+  NotFound:
+    type: object
+    properties:
+      errorMessages:
+        type: string
+      status:
+        type: string
+      statusCode:
+        type: integer
+        format: int32
+    title: Not Found
+    example:
+      status: Forbidden
+      statusCode: 404
+      errorMessages: The URL you requested does not exist.

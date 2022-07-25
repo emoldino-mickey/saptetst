@@ -7,12 +7,10 @@
     <description>saptest - Application</description>
 
     <artifactId>saptest-application</artifactId>
-    <version>1.0-SNAPSHOT</version>
-
     <parent>
         <groupId>com.saptest.api</groupId>
-        <artifactId>saptest</artifactId>
-        <version>1.0-SNAPSHOT</version>
+	    <artifactId>saptest</artifactId>
+	    <version>1.0-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -49,7 +47,6 @@
             <groupId>com.sap.cloud.sdk.s4hana</groupId>
             <artifactId>s4hana-all</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
@@ -67,13 +64,10 @@
             <groupId>com.sap.hcp.cf.logging</groupId>
             <artifactId>cf-java-logging-support-logback</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-
         <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
@@ -98,11 +92,6 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
-        
-		<dependency>
-	        <groupId>com.sap.cloud.sdk.datamodel</groupId>
-	        <artifactId>openapi-core</artifactId>
-    	</dependency>        
     </dependencies>
 
     <build>
@@ -123,32 +112,7 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>com.sap.cloud.sdk.plugins</groupId>
-                <artifactId>usage-analytics-maven-plugin</artifactId>
-                <version>3.64.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>usage-analytics</goal>
-                        </goals>
-                        <configuration>
-                            <skipUsageAnalytics>false</skipUsageAnalytics>
-                            <generateSalt>true</generateSalt>
-                            <!--
-                            Note: A random salt is auto-generated once the project is built for the first time.
-                            Please keep the generated salt in the POM file, for example, when pushing to git.
-
-                            To learn more, visit: https://blogs.sap.com/2018/10/23/usage-analytics-s4sdk/
-                            -->
-                            <salt>2b085a8fcb588194cd2209cd906592ff77dda21aa3d396df36d255f5d18d4a9c</salt>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
+             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.7</version>
@@ -188,27 +152,6 @@
                         <surefire.forkDir>${project.build.directory}/surefire-fork/${surefire.forkNumber}/
                         </surefire.forkDir>
                     </systemPropertyVariables>
-                </configuration>
-            </plugin>
-             <plugin>
-                <groupId>com.sap.cloud.sdk.datamodel</groupId>
-                <artifactId>openapi-generator-maven-plugin</artifactId>
-                <!-- Please use always the latest version. You can find it on this page.-->
-                <version>3.64.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <inputSpec>${project.basedir}/yaml/purchase_orders.yaml</inputSpec>
-                    <outputDirectory>${project.build.directory}/openapi</outputDirectory>
-                    <deleteOutputDirectory>true</deleteOutputDirectory>
-                    <apiPackage>com.mycompany.openapi.sample.api</apiPackage>
-                    <modelPackage>com.mycompany.openapi.sample.model</modelPackage>
-                    <apiMaturity>released</apiMaturity>
                 </configuration>
             </plugin>
             

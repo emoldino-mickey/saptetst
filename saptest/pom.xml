@@ -8,9 +8,9 @@
 
     <groupId>com.saptest.api</groupId>
     <artifactId>saptest</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${global.version}</version>
     <packaging>pom</packaging>
-
+    
     <properties>
         <spring-boot.version>2.6.3</spring-boot.version>
 
@@ -20,6 +20,8 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.testSource>${java.version}</maven.compiler.testSource>
         <maven.compiler.testTarget>${java.version}</maven.compiler.testTarget>
+        
+        <global.version>1.0-SNAPSHOT</global.version>
 
         <project.build.resourceEncoding>UTF-8</project.build.resourceEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -29,29 +31,32 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.sap.cloud.sdk</groupId>
-                <artifactId>sdk-bom</artifactId>
-                <version>3.64.0</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
             <dependency>
                 <groupId>javax.validation</groupId>
                 <artifactId>validation-api</artifactId>
                 <version>2.0.1.Final</version>
+            </dependency>            
+            <dependency>
+			    <groupId>com.sap.cloud.sdk.datamodel</groupId>
+			    <artifactId>openapi-core</artifactId>
+			</dependency>
+			<dependency>
+                <groupId>com.sap.cloud.sdk</groupId>
+                <artifactId>sdk-bom</artifactId>
+                <version>3.72.0</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
-            
-
-	            
+            <dependency>
+                <groupId>com.sap.cds</groupId>
+                <artifactId>cds-integration-cloud-sdk</artifactId>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -117,7 +122,7 @@
                 <groupId>com.sap.cloud.sdk.datamodel</groupId>
                 <artifactId>openapi-generator-maven-plugin</artifactId>
                 <!-- Please use always the latest version. You can find it on this page.-->
-                <version>3.64.0</version>
+                <version>3.72.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -129,8 +134,8 @@
                     <inputSpec>${project.basedir}/yaml/purchase_orders.yaml</inputSpec>
                     <outputDirectory>${project.build.directory}/openapi</outputDirectory>
                     <deleteOutputDirectory>true</deleteOutputDirectory>
-                    <apiPackage>com.mycompany.openapi.sample.api</apiPackage>
-                    <modelPackage>com.mycompany.openapi.sample.model</modelPackage>
+                    <apiPackage>com.emoldino.openapi.ariba.api</apiPackage>
+                    <modelPackage>com.emoldino.openapi.ariba.model</modelPackage>
                     <apiMaturity>released</apiMaturity>
                 </configuration>
             </plugin>

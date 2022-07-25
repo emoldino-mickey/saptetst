@@ -1,6 +1,6 @@
 swagger: '2.0'
 security:
-  - OAuth2: []
+- OAuth2: []
 securityDefinitions:
   OAuth2:
     type: oauth2
@@ -21,99 +21,99 @@ x-sap-shortText: Retrieve purchase order header and item details
 host: sandbox.api.sap.com
 basePath: /ariba/api/purchase-orders/v1/sandbox
 schemes:
-  - https
+- https
 x-sap-ext-overview:
-  - name: API Group
-    values:
-      - Ariba Network
-  - name: API System Role
-    values:
-      - Ariba Network
-  - name: Datacenters
-    values:
-      - US
+- name: API Group
+  values:
+  - Ariba Network
+- name: API System Role
+  values:
+  - Ariba Network
+- name: Datacenters
+  values:
+  - US
 x-servers:
-  - url: https://{region}/api/purchase-orders/v1/{environment}
-    description: Ariba Network Purchase Orders Buyer API endpoint
-    templates:
-      region:
-        enum:
-          - openapi.ariba.com
-        default: openapi.ariba.com
-        description: The SAP Ariba region where the SAP Ariba APIs are used.
-      regionOauth:
-        enum:
-          - api.ariba.com
-        default: api.ariba.com
-        description: The SAP Ariba regional OAuth server associated with the region where the SAP Ariba APIs are used.
-      environment:
-        enum:
-          - sandbox
-          - prod
-        default: sandbox
-        description: Public URI Prefix for different environments, prod is Test or Production environment for Cloud Business Applications and sandbox is Mock environment with sample data. For more information, go to the SAP Ariba Developer Portal at https://developer.ariba.com.
+- url: https://{region}/api/purchase-orders/v1/{environment}
+  description: Ariba Network Purchase Orders Buyer API endpoint
+  templates:
+    region:
+      enum:
+      - openapi.ariba.com
+      default: openapi.ariba.com
+      description: The SAP Ariba region where the SAP Ariba APIs are used.
+    regionOauth:
+      enum:
+      - api.ariba.com
+      default: api.ariba.com
+      description: The SAP Ariba regional OAuth server associated with the region where the SAP Ariba APIs are used.
+    environment:
+      enum:
+      - sandbox
+      - prod
+      default: sandbox
+      description: Public URI Prefix for different environments, prod is Test or Production environment for Cloud Business Applications and sandbox is Mock environment with sample data. For more information, go to the SAP Ariba Developer Portal at https://developer.ariba.com.
 tags:
-  - name: purchase-orders
-    description: Ariba Network Purchase Orders Buyer API
+- name: purchase-orders
+  description: Ariba Network Purchase Orders Buyer API
 paths:
   /orders:
     get:
       tags:
-        - Orders
+      - Orders
       summary: Retrieves purchase-order header information.
       description: |-
         Retrieves header information in purchase orders for a specified buyer.
          Information can be further refined by filters, such as limiting data to a certain supplier and order ID.
       operationId: getOrderHeaderListUsingGET
       consumes:
-        - application/json
+      - application/json
       produces:
-        - application/json
+      - application/json
       parameters:
-        - name: X-ARIBA-NETWORK-ID
-          in: header
-          description: The buyer's ANID.
-          required: true
-          type: string
-          default: AN02000000280
-        - name: $filter
-          in: query
-          description: |
-            $filter=_expression_. The value of _expression_ is a combination of a resource parameter and its value. The 'eq' operator to links the parameter and value. The'and' operator links two or more parameter-value pairs. For example, $filter=a eq 'b' and c eq 'd'. This feature supports the following parameters:<br/>
-            buyerANID         -- The buyer's ANID. <br/>
-            documentNumber       -- Same as the orderID. The identifier for this order, similar to the purchase order number. <br/>
-            orderStatus          -- Indicates what state of processing the order has reached. <br/>
-            routingStatus        -- Indicates whether a purchase order or service order is queued, sent, acknowledged, or if routing failed.<br/>
-            startDate            -- The starting date of the period in which Ariba Network received the order. The maximum date range is 31 days.<br/>
-            endDate              -- The ending date of the period in which Ariba Network received the order. The maximum date range is 31 days.<br/>
-          required: false
-          type: string
-        - name: $orderby
-          in: query
-          description: |
-            Specifies the sort order of results. You need to provide the parameter buyerANID into $filter when using $orderby. For example, '$orderby=_propertyName_ asc'.<br/>
-            The order can be either ascending or descending: asc or desc. If $orderby is not specified, results are sorted in ascending order by default.<br/>
-            _propertyName_  -- The column name to sort by. This is either  BUYERORGID or SUPPLIERORGID. <br/>
-          required: false
-          type: string
-        - name: $skip
-          in: query
-          description: Specifies the number of items to skip (offset).
-          required: false
-          type: integer
-          format: int32
-        - name: $top
-          in: query
-          description: Specifies the number of items to return (page size).
-          required: false
-          type: integer
-          format: int32
-        - name: $count
-          in: query
-          description: |
-            Returns the number of elements in a collection inline. The syntax is $count=true.<br/>
-          required: false
-          type: string
+      - name: X-ARIBA-NETWORK-ID
+        in: header
+        description: The buyer's ANID.
+        required: true
+        type: string
+        default: AN02000000280
+      - name: $filter
+        in: query
+        description: |
+          $filter=_expression_. The value of _expression_ is a combination of a resource parameter and its value. The 'eq' operator to links the parameter and value. The'and' operator links two or more parameter-value pairs. For example, $filter=a eq 'b' and c eq 'd'. This feature supports the following parameters:<br/>
+          buyerANID         -- The buyer's ANID. <br/>
+          documentNumber       -- Same as the orderID. The identifier for this order, similar to the purchase order number. <br/>
+          orderStatus          -- Indicates what state of processing the order has reached. <br/>
+          routingStatus        -- Indicates whether a purchase order or service order is queued, sent, acknowledged, or if routing failed.<br/>
+          startDate            -- The starting date of the period in which Ariba Network received the order. The maximum date range is 31 days.<br/>
+          endDate              -- The ending date of the period in which Ariba Network received the order. The maximum date range is 31 days.<br/>
+        required: false
+        type: string
+      - name: $orderby
+        in: query
+        description: |
+          Specifies the sort order of results. You need to provide the parameter buyerANID into $filter when using $orderby. For example, '$orderby=_propertyName_ asc'.<br/>
+          The order can be either ascending or descending: asc or desc. If $orderby is not specified, results are sorted in ascending order by default.<br/>
+          _propertyName_  -- The column name to sort by. This is either  BUYERORGID or SUPPLIERORGID. <br/>
+        required: false
+        type: string
+      - name: $skip
+        in: query
+        description: Specifies the number of items to skip (offset).
+        required: false
+        type: integer
+        format: int32
+      - name: $top
+        in: query
+        description: Specifies the number of items to return (page size).
+        required: false
+        type: integer
+        format: int32
+      - name: $count
+        in: query
+        description: |
+          Returns the number of elements in a collection inline. The syntax is $count=true.<br/>
+        required: false
+        type: string
       responses:
         '200':
           description: Successful Response
@@ -138,63 +138,63 @@ paths:
   /items:
     get:
       tags:
-        - Orders
+      - Orders
       summary: Retrieves line-item information from purchase orders.
       description: |-
         Retrieves information from line items in purchase orders for a specified buyer.
          Information can be further refined by filters, such as limiting data to a certain supplier and order ID.
       operationId: getOrderItemsListUsingGET
       consumes:
-        - application/json
+      - application/json
       produces:
-        - application/json
+      - application/json
       parameters:
-        - name: X-ARIBA-NETWORK-ID
-          in: header
-          description: The buyer's ANID.
-          required: true
-          type: string
-          default: AN02000000280
-        - name: $filter
-          in: query
-          description: |
-            $filter=_expression_. The _expression_ is the combination of a resource parameter and its value. The 'eq' operator links a parameter and its value. The 'and' operator links two or more parameter-value pairs. For example, $filter=a eq 'b' and c eq 'd'. This feature supports the following parameters:<br/>
-            buyerANID         -- The buyer's ANID. <br/>
-            documentNumber       -- The identifier for this order, similar to the purchase order number. <br/>
-            orderStatus          -- Indicates what state of processing the order has reached. <br/>
-            routingStatus        -- Indicates whether a purchase order or service order is queued, sent, acknowledged, or if routing failed.<br/>
-            startDate            -- The starting date of the period in which Ariba Network received the order. The maximum date range is 31 days.<br/>
-            endDate              -- The ending date of the period in which Ariba Network received the order. The maximum date range is 31 days.<br/>
-          required: false
-          type: string
-        - name: $orderby
-          in: query
-          description: |
-            Specifies the sort order of results. You need to provide the parameter supplierANID into $filter when using $orderby. For example, $orderby=propertyName asc.<br/>
-            The order can be either ascending or descending: asc or desc. If $orderby
-             is not specified, results are sorted in  ascending order by default.<br/>
-            
-            propertyName    -- The column to sort on. This is either BUYERORGID or SUPPLIERORGID. <br/>
-          required: false
-          type: string
-        - name: $skip
-          in: query
-          description: The number of items to be skip (offset).
-          required: false
-          type: integer
-          format: int32
-        - name: $top
-          in: query
-          description: The number of items to return (page size).
-          required: false
-          type: integer
-          format: int32
-        - name: $count
-          in: query
-          description: |
-            Returns the number of elements in a collection inline. The syntax is $count=true.<br/>
-          required: false
-          type: string
+      - name: X-ARIBA-NETWORK-ID
+        in: header
+        description: The buyer's ANID.
+        required: true
+        type: string
+        default: AN02000000280
+      - name: $filter
+        in: query
+        description: |
+          $filter=_expression_. The _expression_ is the combination of a resource parameter and its value. The 'eq' operator links a parameter and its value. The 'and' operator links two or more parameter-value pairs. For example, $filter=a eq 'b' and c eq 'd'. This feature supports the following parameters:<br/>
+          buyerANID         -- The buyer's ANID. <br/>
+          documentNumber       -- The identifier for this order, similar to the purchase order number. <br/>
+          orderStatus          -- Indicates what state of processing the order has reached. <br/>
+          routingStatus        -- Indicates whether a purchase order or service order is queued, sent, acknowledged, or if routing failed.<br/>
+          startDate            -- The starting date of the period in which Ariba Network received the order. The maximum date range is 31 days.<br/>
+          endDate              -- The ending date of the period in which Ariba Network received the order. The maximum date range is 31 days.<br/>
+        required: false
+        type: string
+      - name: $orderby
+        in: query
+        description: |
+          Specifies the sort order of results. You need to provide the parameter supplierANID into $filter when using $orderby. For example, $orderby=propertyName asc.<br/>
+          The order can be either ascending or descending: asc or desc. If $orderby
+           is not specified, results are sorted in  ascending order by default.<br/>
+
+          propertyName    -- The column to sort on. This is either BUYERORGID or SUPPLIERORGID. <br/>
+        required: false
+        type: string
+      - name: $skip
+        in: query
+        description: The number of items to be skip (offset).
+        required: false
+        type: integer
+        format: int32
+      - name: $top
+        in: query
+        description: The number of items to return (page size).
+        required: false
+        type: integer
+        format: int32
+      - name: $count
+        in: query
+        description: |
+          Returns the number of elements in a collection inline. The syntax is $count=true.<br/>
+        required: false
+        type: string
       responses:
         '200':
           description: Successful Response

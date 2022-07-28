@@ -664,7 +664,18 @@ definitions:
             name:
               type: string
       charge:
-        type: string
+        type: object
+        properties:
+          amount:
+            type: number
+            format: double
+          currencyCode:
+            type: string
+          approx:
+            type: number
+            format: double
+          conversionDate:
+            type: string
       accountingName:
         type: string
   BadRequest:

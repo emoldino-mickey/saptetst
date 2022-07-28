@@ -24,7 +24,7 @@ public class HelloWorldController {
 //        .registerDestination(customHttpDestination);
 
 
-	final HttpDestination destination = DestinationAccessor.getDestination("MyDestination").asHttp();
+	//final HttpDestination destination = DestinationAccessor.getDestination("MyDestination").asHttp();
 	final String X_ARIBA_NETWORK_ID = "AN02000000280";
 
 
